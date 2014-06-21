@@ -25,3 +25,10 @@
                         (garden (living-room east door))
                         (attic  (living-room downstairs ladder))))
 
+(defun ingredients (order)
+  (mapcan (lambda (burger)
+            (case burger
+              (single (list 'patty))
+              (double (list 'patty 'patty))
+              (double-cheese (list 'patty 'patty 'cheese))))
+          order))
