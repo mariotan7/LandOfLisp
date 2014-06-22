@@ -253,3 +253,25 @@
       (some (lambda (x)
               (within-one x b edge-alist))
             (neighbors a edge-alist))))
+
+;;---------------------------------------------
+;; ハッシュテーブルで性能改善
+;;---------------------------------------------
+(defun hash-edges (edge-list)
+  (let ((tab (make-hash-table)))
+    (mapc (lambda (x)
+            (let ((node (car x)))
+              (push (cdr x) (gethash node tab))))
+          edge-list)
+    tab))
+
+(defun get-connected-hash (node edge-tab)
+  (let ((visited (make-hash-table)))
+    (labels ((traverse (node)
+                       (unless (gethash node visited)
+                         (setf (gethash node visited) t)
+                         (mapc (lambda (edge)
+                                 (traverse edge))
+                               (gethash node edge-tab)))))
+      (traverse node))
+    visited))
